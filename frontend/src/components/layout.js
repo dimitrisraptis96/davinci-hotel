@@ -10,8 +10,9 @@ const Footer = styled.footer`
   font-size: 0.75em;
   color: gray;
   display: flex;
+  margin-top: 5em;
 
-  position: absolute;
+  /* position: absolute; */
   bottom: 10px;
 `
 
