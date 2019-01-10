@@ -29,16 +29,15 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   /* text-align: center; */
 
-  width: 30%;
-  padding: 2em 1em 0 1em;
+  width: 50%;
+  padding: 2em 2em 0 2em ;
   margin: 1em 0;
 
   border-radius: 8px;
-  box-shadow: -10px -10px 30px 4px rgba(85, 239, 196, 0.1),
-    10px 10px 30px 4px rgba(85, 239, 196, 0.1);
+  box-shadow: 0 13px 78px -13px rgba(0,0,0,0.4);
 `;
 
 const Label = styled.p`
@@ -50,6 +49,10 @@ const Label = styled.p`
 const Row = styled.div`
   display: flex;
   flex-direction: row;
+
+  > :first-child {
+    margin-right: 1em;
+  }
 `;
 
 const Hotel = ({
@@ -64,9 +67,37 @@ const Hotel = ({
   </Card>
 )
 
+const dummyHotels = [
+  {
+    country: 'Greece',
+    city: 'Athens',
+    rating: '5',
+  },
+  {
+    country: 'Greece',
+    city: 'Athens',
+    rating: '5',
+  },
+  {
+    country: 'Greece',
+    city: 'Athens',
+    rating: '5',
+  },
+  {
+    country: 'Greece',
+    city: 'Athens',
+    rating: '5',
+  },
+  {
+    country: 'Greece',
+    city: 'Athens',
+    rating: '5',
+  },
+]
+
 class Hotels extends React.Component {
   state = {
-    hotels: [],
+    hotels: dummyHotels,
     isLoading: false,
     isError: false,
   }
@@ -77,6 +108,23 @@ class Hotels extends React.Component {
 
   fetchHotels = () => {
     this.setState({isLoading: true});
+
+    axios({
+      method:'get',
+      url:'/hotels',
+    })
+      .then((response) => {
+        const {hotels} = response.data;
+
+        this.setState({
+          // hotels,
+          isLoading: false,
+        })
+      })
+      .catch((error) => {
+        this.setState({isLoading: false})
+        swal("Oops!", `Server Error`, "error");
+      });
   }
 
   render() {
@@ -86,7 +134,14 @@ class Hotels extends React.Component {
       isError,
     } = this.state;
 
-    if(isLoading) return (<p> Please wait, while we fetch our hotels! </p>);
+    if(isLoading) {
+      return ( 
+        <Layout>
+          <p> Please wait, while we fetch our hotels... </p>
+        </Layout>
+      );
+    }
+
     const hasHotels = hotels !== [];
 
     return (
@@ -94,7 +149,7 @@ class Hotels extends React.Component {
         <h2><Underline>Hotels</Underline></h2>          
 
         {hasHotels &&
-          <React.Frament>
+          <React.Fragment>
             <p style={{margin: '2em 0'}}>
               Here is the list of all the available hotels in our database:
             </p>
@@ -105,7 +160,7 @@ class Hotels extends React.Component {
                 rating={hotel.rating}
               />
             ))}
-          </React.Frament>
+          </React.Fragment>
         }
 
         { !hasHotels && 
