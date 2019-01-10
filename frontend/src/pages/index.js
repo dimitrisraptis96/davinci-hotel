@@ -2,13 +2,13 @@ import React from 'react'
 import { Link } from 'gatsby'
 import { graphql } from "gatsby"
 import Img from "gatsby-image"
+import styled from 'styled-components';
 
 import Layout from '../components/layout'
 import Image from '../components/image'
 import Card from '../components/card'
 import SEO from '../components/seo'
 
-import styled from 'styled-components';
 
 const Underline = styled.span`
   background-image: linear-gradient(120deg, #55efc4, #55efc4 100%);
@@ -52,7 +52,7 @@ const IndexPage = ({data}) => {
   ];
 
   return (
-    <Layout>
+    <Layout >
       <SEO title="Home" keywords={[`gatsby`, `application`, `react`]} />
       {/* <Image width={300} name='hotel.jpg'/> */}
       <p>
@@ -71,6 +71,7 @@ const IndexPage = ({data}) => {
           ))
         }
       </Cards>
+
     </Layout>
   );
 }
@@ -99,5 +100,6 @@ export const query = graphql`
     image3: file(relativePath: { eq: "payment.jpg" }) {
       ...squareImage
     }
+
   }
 `
