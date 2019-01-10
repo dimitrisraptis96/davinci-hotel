@@ -1,8 +1,10 @@
 import React from 'react'
+import axios from 'axios';
 import styled from 'styled-components'
+import swal from 'sweetalert';
 
 import { Button } from "grommet";
-import { grommet } from "grommet/themes";
+import { grommet, MaskedInput } from "grommet/themes";
 
 import { Link } from 'gatsby'
 // import { graphql } from 'gatsby'
@@ -33,6 +35,24 @@ class CheckPayment extends React.Component {
 
   onChange = event => this.setState({ reservationCode: event.target.value })
 
+  check = () => {
+    const {
+      reservationCode,
+    } = this.state;
+
+    axios.post('https://dds/checkReservationPayment', {
+      reservationCode,
+    })
+      .then((response) => {
+        this.setState({isAvailable: true})
+        swal("Nice!", "Your reservation payment is valid!  ", "success");
+      })
+      .catch((error) => {
+        this.setState({isAvailable: false})
+        swal("Oops!", `No valid payment for the "${reservationCode}" reservation`, "error");
+      });
+  }
+
   render() {
     const {
       reservationCode
@@ -43,13 +63,13 @@ class CheckPayment extends React.Component {
         <h2>
           <Underline>Check your Payment</Underline>
         </h2>
-        <p>Fill your reservation code in order to clarify your payment:</p>
+        <p>Fill your <b>reservation code</b> in order to clarify your payment:</p>
 
         <Input 
           value={reservationCode}
           onChange={this.onChange}
         />
-        <Button color='#55efc4' label={'Check Now'} onClick={() => {}} />
+        <Button color='#55efc4' label={'Check Now'} onClick={this.check} />
       </Layout>
     )
   }
