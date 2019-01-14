@@ -97,7 +97,7 @@ const dummyHotels = [
 
 class Hotels extends React.Component {
   state = {
-    hotels: dummyHotels,
+    hotels: [],
     isLoading: false,
     isError: false,
   }
@@ -109,15 +109,12 @@ class Hotels extends React.Component {
   fetchHotels = () => {
     this.setState({isLoading: true});
 
-    axios({
-      method:'get',
-      url:'/hotels',
-    })
+    axios.get('https://stormy-shore-14285.herokuapp.com/hotels')
       .then((response) => {
-        const {hotels} = response.data;
+        const hotels = response.data;
 
         this.setState({
-          // hotels,
+          hotels,
           isLoading: false,
         })
       })
@@ -143,7 +140,8 @@ class Hotels extends React.Component {
     }
 
     const hasHotels = hotels !== [];
-
+    console.log(hotels);
+    
     return (
       <Layout>
         <h2><Underline>Hotels</Underline></h2>          

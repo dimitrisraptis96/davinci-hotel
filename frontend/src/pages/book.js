@@ -11,6 +11,7 @@ import { Button } from "grommet";
 
 import Calendar from "../components/calendar";
 import Input from '../components/input'
+import Select from '../components/select'
 import Layout from '../components/layout'
 import Image from '../components/image'
 import Card from '../components/card'
@@ -36,6 +37,7 @@ const Cards = styled.div`
 const CalendarWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  margin-bottom: 2em;
   
   > :first-child {
     margin-right: 2em;
@@ -44,9 +46,7 @@ const CalendarWrapper = styled.div`
 
 class Book extends React.Component {
   state = {
-    unitId: '',
-    buildingId: '',
-    roomId: '',
+    roomId: '1',
 
     isAvailable: false,
 
@@ -66,32 +66,35 @@ class Book extends React.Component {
   handleLastname = event => this.setState({ lastname: event.target.value })
   handleEmail = event => this.setState({ email: event.target.value })
   
-  handleDateFrom = nextDate => {
+  handleDateFrom = date => {
     const { dateFrom } = this.state;
+    const nextDate = date.split('T')[0];
     this.setState({ dateFrom: nextDate !== dateFrom ? nextDate : undefined });
   };
   
-  handleDateTo = nextDate => {
+  handleDateTo = date => {
     const { dateTo } = this.state;
+    const nextDate = date.split('T')[0];
     this.setState({ dateTo: nextDate !== dateTo ? nextDate : undefined });
   };
+
+  handleNumOfPeople = option => this.setState({numOfPeople: option.value});
 
   checkAvailability = () => {
     const {
       roomId,
-      buildingId,
-      unitId,
+      numOfPeople,
       dateFrom,
       dateTo,
     } = this.state;
+    
+    const fd = new FormData();
+    fd.append('dateFrom', dateFrom);
+    fd.append('dateTo', dateTo);
+    fd.append('people', numOfPeople);
+    fd.append('roomId', roomId);
 
-    axios.post('/checkRoom', {
-      roomId,
-      buildingId,
-      unitId,
-      dateTo,
-      dateFrom,
-    })
+    axios.post('https://stormy-shore-14285.herokuapp.com/' + 'checkRoom', fd)
       .then((response) => {
         this.setState({isAvailable: true})
         swal("Perfect!", "The room is available!  ", "success");
@@ -105,8 +108,6 @@ class Book extends React.Component {
   submit = () => {
     const {
       roomId,
-      buildingId,
-      unitId,
       dateTo,
       dateFrom,
       numOfPeople,
@@ -115,17 +116,15 @@ class Book extends React.Component {
       email,
     } = this.state;
 
-    axios.post('http://fakeurl.com/bookd', {
-      roomId,
-      buildingId,
-      unitId,
-      dateTo,
-      dateFrom,
-      numOfPeople,
-      firstname,
-      lastname,
-      email,
-    })
+    const fd = new FormData();
+    fd.append('dateFrom', dateFrom);
+    fd.append('dateTo', dateTo);
+    fd.append('firstname', firstname);
+    fd.append('lastname', lastname);
+    fd.append('email', email);
+    fd.append('roomId', roomId);
+
+    axios.post('https://stormy-shore-14285.herokuapp.com/' + 'book', fd)
       .then((response) => {
         this.setState({isAvailable: true})
         swal("Have Fun!", "Your reservation was successful!","success");
@@ -145,6 +144,7 @@ class Book extends React.Component {
       dateFrom,
       dateTo,
       isAvailable,
+      numOfPeople,
     } = this.state;
 
     console.log(this.state);
@@ -170,6 +170,14 @@ class Book extends React.Component {
                 onSelect={this.handleDateTo}
               />
             </CalendarWrapper>
+            
+            <Select
+              placeholder="eg. 2"
+              label="Number of people"
+              value={numOfPeople}
+              options={['1', '2', '3', '4']}
+              onChange={this.handleNumOfPeople}
+            />
 
             <Button style={{margin: '2em 0'}} color='#55efc4' label={'Check'} onClick={this.checkAvailability} />
           </Fragment>

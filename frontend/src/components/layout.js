@@ -11,9 +11,6 @@ const Footer = styled.footer`
   color: gray;
   display: flex;
   margin-top: 5em;
-
-  /* position: absolute; */
-  bottom: 10px;
 `
 
 const Underline = styled.span`

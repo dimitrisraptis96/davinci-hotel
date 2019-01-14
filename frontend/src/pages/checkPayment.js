@@ -39,17 +39,24 @@ class CheckPayment extends React.Component {
     const {
       reservationCode,
     } = this.state;
+    const fd = new FormData();
+    fd.append('reservationId', reservationCode);
 
-    axios.post('https://dds/checkReservationPayment', {
-      reservationCode,
-    })
+    axios.post('https://stormy-shore-14285.herokuapp.com/'+'payed', fd)
       .then((response) => {
         this.setState({isAvailable: true})
-        swal("Nice!", "Your reservation payment is valid!  ", "success");
+        const payed = response.data.payed;
+
+        if (payed){
+          swal("Nice!", "Your reservation payment is valid!  ", "success");
+        }
+        else {
+          swal("Oops!", `No valid payment for the "${reservationCode}" reservation`, "error");
+        }
       })
       .catch((error) => {
         this.setState({isAvailable: false})
-        swal("Oops!", `No valid payment for the "${reservationCode}" reservation`, "error");
+        swal("Oops!", `Not valid reservation code`, "error");
       });
   }
 

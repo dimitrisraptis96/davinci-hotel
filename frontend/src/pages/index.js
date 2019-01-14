@@ -41,7 +41,7 @@ const IndexPage = ({data}) => {
       text: 'Show me the hotels',
       label: 'Show',
       image: <Image fluid={data.image2.childImageSharp.fluid} />,
-      route: '/hotels',
+      route: '/showHotels',
     },
     {
       text: 'Did I pay my reservation?',
